@@ -15,9 +15,13 @@ const STATUS_COMPLETED = 'COMPLETED';
 const STATUS_DELETED = 'DELETED';
 
 function inflateTables(todo_json) {
-  tbl_active_todos.innerHTML = '';
-  tbl_completed_todos.innerHTML = '';
-  tbl_deleted_todos.innerHTML = '';
+  tbl_active_todos.innerHTML = '<tbody></tbody>';
+  tbl_completed_todos.innerHTML = '<tbody></tbody>';
+  tbl_deleted_todos.innerHTML = '<tbody></tbody>';
+
+  var tbody_active_todos = tbl_active_todos.getElementsByTagName('tbody')[0];
+  var tbody_completed_todos = tbl_completed_todos.getElementsByTagName('tbody')[0];
+  var tbody_deleted_todos = tbl_deleted_todos.getElementsByTagName('tbody')[0];
   
   var todo_items = JSON.parse(todo_json);
   Object.keys(todo_items).forEach(key => {
@@ -27,7 +31,6 @@ function inflateTables(todo_json) {
 
     switch(todo_items[key].status) {
       case STATUS_ACTIVE:
-        var tbody = document.createElement('tbody');
         var tdata_check = document.createElement('td');
         tdata_check.innerHTML = '<input type=checkbox></input>';
         tdata_check.onclick = function() { completeTodoAJAX(key); };
@@ -37,11 +40,9 @@ function inflateTables(todo_json) {
         tblRow.appendChild(tdata_check);
         tblRow.appendChild(tdata_desc);
         tblRow.appendChild(tdata_del);
-        tbody.appendChild(tblRow);
-        tbl_active_todos.appendChild(tbody);
+        tbody_active_todos.appendChild(tblRow);
         break;
       case STATUS_COMPLETED:
-        var tbody = document.createElement('tbody');
         var tdata_check = document.createElement('td');
         tdata_check.innerHTML = '<input type=checkbox checked=true></input>';
         tdata_check.onclick = function() { undoCompleteTodoAJAX(key); };
@@ -51,14 +52,11 @@ function inflateTables(todo_json) {
         tblRow.appendChild(tdata_check);
         tblRow.appendChild(tdata_desc);
         tblRow.appendChild(tdata_del);
-        tbody.appendChild(tblRow);
-        tbl_completed_todos.appendChild(tbody);
+        tbody_completed_todos.appendChild(tblRow);
         break;
       case STATUS_DELETED:
-        var tbody = document.createElement('tbody');
         tblRow.appendChild(tdata_desc);
-        tbody.appendChild(tblRow);
-        tbl_deleted_todos.appendChild(tbody);
+        tbody_deleted_todos.appendChild(tblRow);
         break;
     }
   });
@@ -133,11 +131,14 @@ function getTodosAJAX() {
 }
 
 function addTodoAJAX() {
+  var input_add_item = document.getElementById('add_item');
+  if(input_add_item.value == '') return;
+
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/api/todos', true);
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  var data = 'todo_title=' + encodeURI(document.getElementById('add_item').value);
-  document.getElementById('add_item').value = '';
+  var data = 'todo_title=' + encodeURI(input_add_item.value);
+  input_add_item.value = '';
   
   xhr.onreadystatechange = function() {
     if(xhr.readyState == XMLHttpRequest.DONE) {

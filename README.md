@@ -6,7 +6,7 @@ Intended Audience: Evaluators of trainee assignments at Nagarro Software Pvt Ltd
 
 * Installing
     1. Make sure [Node](https://nodejs.org) and [NPM](https://www.npmjs.com) are installed and available in system path.
-    2. Clone this repository (git clone https://<repo-url>) to your local machine.
+    2. Clone this repository (git clone https://repo-url) to your local machine.
     2. On a terminal, cd to the directory where you cloned the repo.
     3. Run 'npm install'.
     If no errors show up, Installation is complete.
